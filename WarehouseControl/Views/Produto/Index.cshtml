@@ -1,0 +1,68 @@
+﻿@model IList<CaelumEstoque.Models.Produto>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de produtos</title>
+</head>
+<body>
+    <div>
+        <ul class="nav nav-pills pull-left">
+            <li>@Html.ActionLink("Novo Produto", "Form")</li>           
+        </ul>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nome do Produto</th>
+                <th>Preco</th>
+                <th>Quantidade</th>
+                <th>Alterar Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var produto in Model)
+            {
+                <tr>
+                    <td>@produto.Id</td>
+
+                    <td>
+                        @Html.RouteLink(produto.Nome, "VisualizaProduto", new { id = produto.Id})
+                    </td>
+
+                    <td>@produto.Preco</td>
+
+                    <td id="quantidade@(produto.Id)">
+                        @produto.Quantidade
+                    </td>
+
+                    <td>
+                        <a href="#" onclick="incrementa(@produto.Id);"  class="btn btn-info btn-group-sm">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+
+                        <a href="#" onclick="decrementa(@produto.Id);" class="btn btn-danger btn-group-sm">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </a>
+                    </td>                    
+                </tr>
+            }
+        </tbody>
+    </table>
+<script type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+    function decrementa(produtoId){
+        var url = "@Url.Action("DecrementaQtd","Produto")";
+        $.post(url, { id: produtoId }, atualiza);
+    }
+    function incrementa(produtoId) {
+        var url = "@Url.Action("IncrementaQtd","Produto")";
+        $.post(url, { id: produtoId }, atualiza);
+    }
+    function atualiza(resposta) {
+        $("#quantidade" + resposta.Id).html(resposta.Quantidade);
+    }
+</script>
+</body>
+</html>
